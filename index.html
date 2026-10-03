@@ -102,9 +102,9 @@
 
     .card {
       flex: 0 0 auto;
-      width: 55vw;
-      max-width: 700px;
-      height: 65vh;
+      width: 45vw; /* تم التصغير من 55vw */
+      max-width: 600px; /* تم التصغير من 700px */
+      height: 60vh; /* تم التصغير من 65vh */
       border-radius: 24px;
       overflow: hidden;
       scroll-snap-align: center;
@@ -117,6 +117,9 @@
       cursor: pointer;
       filter: grayscale(60%) brightness(0.7);
       opacity: 0.7;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     .card.active {
@@ -130,7 +133,8 @@
     .card img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain; /* تم التغيير لضمان ظهور الصورة كاملة */
+      padding: 1.5rem; /* إضافة هامش داخلي ليبدو كإطار */
       transition: transform 0.8s var(--transition), filter 0.8s var(--transition);
     }
 
@@ -270,21 +274,36 @@
 
     @media (max-width: 768px) {
       header {
-        padding: 1.5rem;
+        padding: 1.5rem 1rem;
+        background: linear-gradient(to bottom, var(--bg) 40%, transparent);
       }
       header h1 {
         font-size: 1.8rem;
       }
       main {
-        padding: 0 20vw;
-        gap: 8vw;
+        padding: 80px 5vw 100px 5vw; /* مساحة علوية وسفلية لتفادي التراكب */
+        gap: 5vw;
+        mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+        -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
       }
       .card {
-        width: 70vw;
-        height: 50vh;
+        width: 85vw; /* عرض مناسب للهاتف */
+        height: 55vh; /* طول مناسب للهاتف */
+        transform: rotateY(-5deg) scale(0.95);
+      }
+      .card.active {
+        transform: rotateY(0deg) scale(1);
+      }
+      .card img {
+        padding: 0.75rem; /* هامش داخلي أصغر للهاتف */
       }
       .controls {
         bottom: 1.5rem;
+        padding: 0.4rem;
+      }
+      .control-btn {
+        width: 42px;
+        height: 42px;
       }
       .theme-toggle {
         bottom: 1.5rem;
@@ -293,9 +312,7 @@
         height: 50px;
       }
       footer {
-        bottom: 1.5rem;
-        left: 1.5rem;
-        font-size: 0.7rem;
+        display: none; /* إخفاء الفوتر على الهاتف لمنع التراكب */
       }
     }
   </style>
@@ -368,7 +385,8 @@
       card.className = 'card';
       
       const img = document.createElement('img');
-      img.src = `Pictures/${i}.jpg`;
+      // تم تعديل المسار هنا ليبدأ بحرف P كبير كما طلبت
+      img.src = `Pictures/${i}.jpg`; 
       img.alt = `Artifact ${i}`;
       img.loading = 'lazy';
       
