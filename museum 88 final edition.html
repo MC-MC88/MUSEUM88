@@ -1,0 +1,446 @@
+<!--
+  __  __  ____   ___   ___
+ |  \/  |/ ___| / _ \ / _ \
+ | |\/| | |    | | | | | | |
+ | |  | | |___ | |_| | |_| |
+ |_|  |_|\____| \___/ \___/
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Museum 88</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #050505;
+      --text: #ededed;
+      --card-bg: #111111;
+      --shadow: rgba(0, 0, 0, 0.8);
+      --accent: #ffffff;
+      --transition: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    body.light {
+      --bg: #f5f5f7;
+      --text: #111111;
+      --card-bg: #ffffff;
+      --shadow: rgba(0, 0, 0, 0.1);
+      --accent: #000000;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      overflow: hidden;
+      transition: background 0.6s var(--transition), color 0.6s var(--transition);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    #progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: var(--text);
+      width: 0%;
+      z-index: 2000;
+      transition: width 0.1s linear, background 0.6s var(--transition);
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 2rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      pointer-events: none;
+    }
+
+    header h1 {
+      font-family: 'UnifrakturMaguntia', cursive;
+      font-size: 2.5rem;
+      font-weight: 400;
+      letter-spacing: 0.05em;
+      color: var(--text);
+      transition: color 0.6s var(--transition);
+    }
+
+    main {
+      display: flex;
+      align-items: center;
+      height: 100vh;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: 0 15vw;
+      gap: 5vw;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      perspective: 1200px;
+      mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+      -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+    }
+
+    main::-webkit-scrollbar {
+      display: none;
+    }
+
+    .card {
+      flex: 0 0 auto;
+      width: 55vw;
+      max-width: 700px;
+      height: 65vh;
+      border-radius: 24px;
+      overflow: hidden;
+      scroll-snap-align: center;
+      scroll-snap-stop: always;
+      box-shadow: 0 15px 40px var(--shadow);
+      transition: transform 0.8s var(--transition), box-shadow 0.8s var(--transition), filter 0.8s var(--transition), opacity 0.8s var(--transition), background 0.6s var(--transition);
+      transform: rotateY(-8deg) scale(0.92);
+      background: var(--card-bg);
+      position: relative;
+      cursor: pointer;
+      filter: grayscale(60%) brightness(0.7);
+      opacity: 0.7;
+    }
+
+    .card.active {
+      transform: rotateY(0deg) scale(1);
+      box-shadow: 0 30px 80px var(--shadow);
+      z-index: 10;
+      filter: grayscale(0%) brightness(1);
+      opacity: 1;
+    }
+
+    .card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.8s var(--transition), filter 0.8s var(--transition);
+    }
+
+    .card:hover img {
+      transform: scale(1.05);
+    }
+
+    .controls {
+      position: fixed;
+      bottom: 3rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 0.5rem;
+      background: var(--card-bg);
+      padding: 0.5rem;
+      border-radius: 50px;
+      box-shadow: 0 10px 30px var(--shadow);
+      z-index: 1000;
+      transition: background 0.6s var(--transition), box-shadow 0.6s var(--transition);
+    }
+
+    .control-btn {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      background: transparent;
+      color: var(--text);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: background 0.3s var(--transition), color 0.3s var(--transition), transform 0.2s var(--transition);
+    }
+
+    .control-btn:hover {
+      background: var(--bg);
+      transform: scale(1.1);
+    }
+
+    .control-btn:active {
+      transform: scale(0.95);
+    }
+
+    .control-btn svg {
+      width: 20px;
+      height: 20px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .theme-toggle {
+      position: fixed;
+      bottom: 3rem;
+      right: 3rem;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--text);
+      color: var(--bg);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 10px 30px var(--shadow);
+      transition: transform 0.3s var(--transition), background 0.6s var(--transition), color 0.6s var(--transition);
+      z-index: 1000;
+      overflow: hidden;
+    }
+
+    .theme-toggle:hover {
+      transform: scale(1.1) rotate(15deg);
+    }
+
+    .theme-toggle:active {
+      transform: scale(0.95);
+    }
+
+    .theme-toggle svg {
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: opacity 0.4s var(--transition), transform 0.4s var(--transition);
+    }
+
+    .icon-moon {
+      opacity: 1;
+      transform: rotate(0deg);
+    }
+
+    .icon-sun {
+      opacity: 0;
+      transform: rotate(-90deg);
+    }
+
+    body.light .icon-moon {
+      opacity: 0;
+      transform: rotate(90deg);
+    }
+
+    body.light .icon-sun {
+      opacity: 1;
+      transform: rotate(0deg);
+    }
+
+    footer {
+      position: fixed;
+      bottom: 2rem;
+      left: 3rem;
+      font-size: 0.8rem;
+      font-weight: 300;
+      color: var(--text);
+      opacity: 0.6;
+      z-index: 100;
+      transition: color 0.6s var(--transition);
+    }
+
+    footer a {
+      color: inherit;
+      text-decoration: none;
+      transition: opacity 0.3s ease;
+    }
+
+    footer a:hover {
+      opacity: 1;
+    }
+
+    @media (max-width: 768px) {
+      header {
+        padding: 1.5rem;
+      }
+      header h1 {
+        font-size: 1.8rem;
+      }
+      main {
+        padding: 0 20vw;
+        gap: 8vw;
+      }
+      .card {
+        width: 70vw;
+        height: 50vh;
+      }
+      .controls {
+        bottom: 1.5rem;
+      }
+      .theme-toggle {
+        bottom: 1.5rem;
+        right: 1.5rem;
+        width: 50px;
+        height: 50px;
+      }
+      footer {
+        bottom: 1.5rem;
+        left: 1.5rem;
+        font-size: 0.7rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="progress-bar"></div>
+
+  <header>
+    <h1>Museum 88</h1>
+  </header>
+
+  <main id="gallery"></main>
+
+  <div class="controls">
+    <button class="control-btn" id="prev-btn" aria-label="Previous">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    </button>
+    <button class="control-btn" id="random-btn" aria-label="Random">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <polyline points="16 3 21 3 21 8"></polyline>
+        <line x1="4" y1="20" x2="21" y2="3"></line>
+        <polyline points="21 16 21 21 16 21"></polyline>
+        <line x1="15" y1="15" x2="21" y2="21"></line>
+        <line x1="4" y1="4" x2="9" y2="9"></line>
+      </svg>
+    </button>
+    <button class="control-btn" id="next-btn" aria-label="Next">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </button>
+  </div>
+
+  <button class="theme-toggle" id="theme-toggle" aria-label="Toggle Theme">
+    <svg class="icon-moon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+    </svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </button>
+
+  <footer>
+    <p>Copyright © 2026 <a href="mailto:mohamed005cheikh@gmail.com">mohamed005cheikh@gmail.com</a> | by MC88.</p>
+  </footer>
+
+  <script>
+    const gallery = document.getElementById('gallery');
+    const themeToggle = document.getElementById('theme-toggle');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const randomBtn = document.getElementById('random-btn');
+    const progressBar = document.getElementById('progress-bar');
+    const totalImages = 120;
+    let currentIndex = 0;
+
+    for (let i = 1; i <= totalImages; i++) {
+      const card = document.createElement('div');
+      card.className = 'card';
+      
+      const img = document.createElement('img');
+      img.src = `pictures/${i}.jpg`;
+      img.alt = `Artifact ${i}`;
+      img.loading = 'lazy';
+      
+      card.appendChild(img);
+      gallery.appendChild(card);
+    }
+
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('light');
+    });
+
+    const observerOptions = {
+      root: gallery,
+      rootMargin: '0px',
+      threshold: 0.6
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+          const cards = Array.from(document.querySelectorAll('.card'));
+          currentIndex = cards.indexOf(entry.target);
+        } else {
+          entry.target.classList.remove('active');
+        }
+      });
+    }, observerOptions);
+
+    setTimeout(() => {
+      document.querySelectorAll('.card').forEach(card => {
+        observer.observe(card);
+      });
+    }, 100);
+
+    function scrollToCard(index) {
+      const cards = document.querySelectorAll('.card');
+      if (index >= 0 && index < cards.length) {
+        const card = cards[index];
+        const targetLeft = card.offsetLeft - (gallery.clientWidth - card.offsetWidth) / 2;
+        gallery.scrollTo({ left: targetLeft, behavior: 'smooth' });
+      }
+    }
+
+    prevBtn.addEventListener('click', () => {
+      scrollToCard(currentIndex - 1);
+    });
+
+    nextBtn.addEventListener('click', () => {
+      scrollToCard(currentIndex + 1);
+    });
+
+    randomBtn.addEventListener('click', () => {
+      const randomIndex = Math.floor(Math.random() * totalImages);
+      scrollToCard(randomIndex);
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') {
+        scrollToCard(currentIndex + 1);
+      } else if (e.key === 'ArrowLeft') {
+        scrollToCard(currentIndex - 1);
+      }
+    });
+
+    gallery.addEventListener('scroll', () => {
+      const scrollLeft = gallery.scrollLeft;
+      const scrollWidth = gallery.scrollWidth - gallery.clientWidth;
+      const progress = scrollWidth > 0 ? (scrollLeft / scrollWidth) * 100 : 0;
+      progressBar.style.width = `${progress}%`;
+    });
+  </script>
+
+</body>
+</html>
