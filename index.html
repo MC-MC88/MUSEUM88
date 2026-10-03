@@ -80,7 +80,7 @@
       overflow-x: auto;
       overflow-y: hidden;
       padding: 0 15vw;
-      gap: 5vw;
+      gap: 6vw;
       scroll-snap-type: x mandatory;
       scroll-behavior: smooth;
       -webkit-overflow-scrolling: touch;
@@ -95,9 +95,10 @@
 
     .card {
       flex: 0 0 auto;
-      width: 55vw;
-      max-width: 700px;
-      height: 65vh;
+      height: 72vh;
+      width: auto;
+      aspect-ratio: 1 / 1;
+      max-width: 85vw;
       border-radius: 24px;
       overflow: hidden;
       scroll-snap-align: center;
@@ -123,18 +124,13 @@
     .card img {
       width: 100%;
       height: 100%;
-      object-fit: contain;
-      padding: 3vh 3vw;
-      background: radial-gradient(ellipse at center, #1a1a1a 0%, #0a0a0a 100%);
-      transition: transform 0.8s var(--transition), filter 0.8s var(--transition);
-    }
-
-    body.light .card img {
-      background: radial-gradient(ellipse at center, #ffffff 0%, #ebebeb 100%);
+      object-fit: cover;
+      display: block;
+      transition: transform 0.8s var(--transition);
     }
 
     .card:hover img {
-      transform: scale(1.03);
+      transform: scale(1.02);
     }
 
     .controls {
@@ -275,12 +271,12 @@
         font-size: 1.8rem;
       }
       main {
-        padding: 0 20vw;
+        padding: 0 18vw;
         gap: 8vw;
       }
       .card {
-        width: 70vw;
-        height: 50vh;
+        height: 60vh;
+        max-width: 75vw;
       }
       .controls {
         bottom: 1.5rem;
@@ -365,12 +361,18 @@
     for (let i = 1; i <= totalImages; i++) {
       const card = document.createElement('div');
       card.className = 'card';
-      
+
       const img = document.createElement('img');
       img.src = `Pictures/${i}.jpg`;
       img.alt = `Artifact ${i}`;
       img.loading = 'lazy';
-      
+
+      img.addEventListener('load', () => {
+        if (img.naturalWidth && img.naturalHeight) {
+          card.style.aspectRatio = `${img.naturalWidth} / ${img.naturalHeight}`;
+        }
+      });
+
       card.appendChild(img);
       gallery.appendChild(card);
     }
