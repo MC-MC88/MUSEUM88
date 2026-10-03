@@ -1,10 +1,3 @@
-<!--
-  __  __  ____   ___   ___
- |  \/  |/ ___| / _ \ / _ \
- | |\/| | |    | | | | | | |
- | |  | | |___ | |_| | |_| |
- |_|  |_|\____| \___/ \___/
--->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -130,12 +123,18 @@
     .card img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain;
+      padding: 3vh 3vw;
+      background: radial-gradient(ellipse at center, #1a1a1a 0%, #0a0a0a 100%);
       transition: transform 0.8s var(--transition), filter 0.8s var(--transition);
     }
 
+    body.light .card img {
+      background: radial-gradient(ellipse at center, #ffffff 0%, #ebebeb 100%);
+    }
+
     .card:hover img {
-      transform: scale(1.05);
+      transform: scale(1.03);
     }
 
     .controls {
