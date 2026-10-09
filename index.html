@@ -102,9 +102,9 @@
 
     .card {
       flex: 0 0 auto;
-      width: 45vw; /* تم التصغير من 55vw */
-      max-width: 600px; /* تم التصغير من 700px */
-      height: 60vh; /* تم التصغير من 65vh */
+      width: 45vw; /*  */
+      max-width: 600px; /*   */
+      height: 60vh; /*   */
       border-radius: 24px;
       overflow: hidden;
       scroll-snap-align: center;
@@ -133,8 +133,8 @@
     .card img {
       width: 100%;
       height: 100%;
-      object-fit: contain; /* تم التغيير لضمان ظهور الصورة كاملة */
-      padding: 1.5rem; /* إضافة هامش داخلي ليبدو كإطار */
+      object-fit: contain; /*  */
+      padding: 1.5rem; /*  */
       transition: transform 0.8s var(--transition), filter 0.8s var(--transition);
     }
 
@@ -281,21 +281,21 @@
         font-size: 1.8rem;
       }
       main {
-        padding: 80px 5vw 100px 5vw; /* مساحة علوية وسفلية لتفادي التراكب */
+        padding: 80px 5vw 100px 5vw; /*  */
         gap: 5vw;
         mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
         -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
       }
       .card {
-        width: 85vw; /* عرض مناسب للهاتف */
-        height: 55vh; /* طول مناسب للهاتف */
+        width: 85vw; /* */
+        height: 55vh; /* */
         transform: rotateY(-5deg) scale(0.95);
       }
       .card.active {
         transform: rotateY(0deg) scale(1);
       }
       .card img {
-        padding: 0.75rem; /* هامش داخلي أصغر للهاتف */
+        padding: 0.75rem; /* */
       }
       .controls {
         bottom: 1.5rem;
@@ -312,7 +312,7 @@
         height: 50px;
       }
       footer {
-        display: none; /* إخفاء الفوتر على الهاتف لمنع التراكب */
+        display: none; /* */
       }
     }
   </style>
@@ -385,7 +385,7 @@
       card.className = 'card';
       
       const img = document.createElement('img');
-      // تم تعديل المسار هنا ليبدأ بحرف P كبير كما طلبت
+      // 
       img.src = `Pictures/${i}.jpg`; 
       img.alt = `Artifact ${i}`;
       img.loading = 'lazy';
